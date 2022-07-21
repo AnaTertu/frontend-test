@@ -5,6 +5,7 @@ const path = require('path');
 const Blipp = require('blipp');
 const routes = require(path.join(__dirname, 'routes')).routes;
 var hapicors = require('hapi-cors');
+const { start } = require('repl');
 
 const init = async () => {
     const server = Hapi.server({
@@ -12,20 +13,22 @@ const init = async () => {
         host: 'localhost',
         routes: {
             cors: {
-                origin: ['*']
+                origin: ['*'],
+                credentials: true,
+                exposedHeaders: CPF,
+                additionalHeaders: CPF
             }
         }
     });
 
-
     server.route(routes);
 
-    const start = async function() {
+    const start = async function () {
         try {
-            await server.register({plugin: Blipp, options: ''});
+            await server.register({ plugin: Blipp, options: '' });
             await server.start();
             console.log('Server running on %s', server.info.uri);
-        } catch(err) {
+        } catch (err) {
             console.log(err);
             process.exit(1);
         }
