@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CadastroComponent } from '../../cadastro.component';
+import { MASKS } from 'src/app/constants/masks.constants'
 
 
 @Component({
-  selector: 'app-dados-pessoais',
-  templateUrl: './dados-pessoais.component.html',
-  styleUrls: ['./dados-pessoais.component.scss']
+    selector: 'app-dados-pessoais',
+    templateUrl: './dados-pessoais.component.html',
+    styleUrls: ['./dados-pessoais.component.scss']
 })
 export class DadosPessoaisComponent implements OnInit {
 
@@ -46,27 +47,46 @@ export class DadosPessoaisComponent implements OnInit {
         });
     }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     submit() {
         this.cadastroComponent.dadosPessoais = this.form.getRawValue();
         this.router.navigate(['/cadastro/endereco']);
     }
 
+    validarNome() {
+        const nome = this.form.controls['nome'];
+        const regex = /^[MASKS.NOME]$/;
+        if (nome.value !== undefined && nome.value !== '' && !regex.test(nome.value)) {
+            nome.setErrors({ 'nomeInvalido': true });
+        }
+    }
+
     validarCelular() {
         const celular = this.form.controls['celular'];
-        const regex = /^(([1-9]){2})(([2-5](?!(\d)\5{4})\d{7})|([9](?!(\d)\7{7})\d{8}))$/;
+        const regex = /^[MASKS.CELULAR]$/;
         if (!regex.test(celular.value)) {
-            celular.setErrors({'celularInvalido': true});
+            celular.setErrors({ 'celularInvalido': true });
         }
     }
 
     validarEmail() {
         const email = this.form.controls['email'];
-        const regex = /^[^\s@]+@[^\s@]+$/;
+        const regex = /^[MASKS.EMAIL]$/;
         if (!regex.test(email.value)) {
-            email.setErrors({'emailInvalido': true});
+            email.setErrors({ 'emailInvalido': true });
         }
     }
 
+    validarCPF() {
+        const cpf = this.form.controls['cpf'];
+        const regex = /^[MASKS.CPF]$/;
+        if (!regex.test(cpf.value)) {
+            cpf.setErrors({ 'cpfInvalido': true });
+        }
+    }
+
+    resetar(form: any) {
+        form.reset();
+    }
 }
